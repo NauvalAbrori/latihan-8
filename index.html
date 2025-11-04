@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,intial-scale=1">
+  <title>Login Kelurahan Jati</title>
+
+  <!-- Google Material Symbols (ikon modern transparan) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #2b5876, #4e4376);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+    }
+
+    .container {
+      width: 380px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 40px 35px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    h1 span { color: #00e6b8; }
+
+    .subtitle {
+      font-size: 13px;
+      color: #ddd;
+      margin-bottom: 25px;
+    }
+
+    .login-form input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 45px 12px 15px; /* ruang kanan untuk icon */
+      margin: 8px 0;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      outline: none;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    .login-form input::placeholder { color: #ccc; }
+    .login-form input:focus { background: rgba(255,255,255,0.25); }
+
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      font-size: 22px;
+      user-select: none;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .toggle-password:hover {
+      color: #00e6b8;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .login-form button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 15px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00e6b8, #00bfa5);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 230, 184, 0.5);
+    }
+
+    a {
+      color: #00e6b8;
+      text-decoration: none;
+      font-size: 13px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .footer-text {
+      font-size: 12px;
+      color: #bbb;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .ig { font-size: 12px; color: #00e6b8; margin-top: 5px; }
+
+    .popup {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 999;
+    }
+
+    .popup.show { opacity: 1; pointer-events: auto; }
+    .popup.success { border-left: 4px solid #00e6b8; }
+    .popup.error { border-left: 4px solid #ff4d4d; }
+  </style>
+</head>
+<body>
+  <div class="popup" id="popupMessage"></div>
+
+  <div class="container">
+    <h1>SELAMAT DATANG DI<br><span>WEBSITE KELURAHAN JATI</span></h1>
+    <p class="subtitle">Pelayanan Prima Menuju Kota Probolinggo<br>Semakin Luar Biasa</p>
+
+    <!-- FORM LOGIN -->
+    <form id="loginForm" class="login-form" onsubmit="return login(event)">
+      <input id="username" type="text" placeholder="Username" required />
+
+      <!-- Password dengan icon modern -->
+      <div class="password-wrapper">
+        <input id="password" type="password" placeholder="Password" required />
+        <span class="material-symbols-outlined toggle-password" id="togglePassword">visibility_off</span>
+      </div>
+
+      <button type="submit">LOGIN</button>
+    </form>
+
+    <a href="#" onclick="toggleRegister(true)">Belum punya akun? Registrasi</a>
+
+    <!-- FORM REGISTRASI -->
+    <form id="registerForm" class="login-form" style="display: none;" onsubmit="return register(event)">
+      <input id="regNama" type="text" placeholder="Nama Lengkap" required />
+      <input id="regRT" type="text" placeholder="RT" required />
+      <input id="regRW" type="text" placeholder="RW" required />
+      <input id="regAlamat" type="text" placeholder="Alamat" required />
+      <input id="regUsername" type="text" placeholder="Username" required />
+      <div class="password-wrapper">
+        <input id="regPassword" type="password" placeholder="Password" required />
+        <span class="material-symbols-outlined toggle-password" id="toggleRegPassword">visibility_off</span>
+      </div>
+      <button type="submit">SIMPAN</button>
+      <a href="#" onclick="toggleRegister(false)">Sudah punya akun? Kembali ke Login</a>
+    </form>
+
+    <p class="footer-text">
+      WEBSITE PENDATAAN RT DAN RW<br>
+      KELURAHAN JATI KOTA PROBOLINGGO
+    </p>
+    <p class="ig">@jatikelurahan</p>
+  </div>
+
+  <script>
+    function showPopup(message, type = "success") {
+      const popup = document.getElementById("popupMessage");
+      popup.textContent = message;
+      popup.className = `popup show ${type}`;
+      setTimeout(() => popup.classList.remove("show"), 3000);
+    }
+
+    function toggleRegister(show) {
+      document.getElementById("loginForm").style.display = show ? "none" : "block";
+      document.getElementById("registerForm").style.display = show ? "block" : "none";
+    }
+
+    function login(event) {
+      event.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      if (username === "admin" && password === "123") {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      const warga = JSON.parse(localStorage.getItem("warga")) || [];
+      const ditemukan = warga.find(u => u.username === username && u.password === password);
+
+      if (ditemukan) {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "dashboard.html";
+      } else {
+        showPopup("Username atau Password salah!", "ok");
+      }
+    }
+
+    function register(event) {
+      event.preventDefault();
+      const nama = document.getElementById("regNama").value;
+      const rt = document.getElementById("regRT").value;
+      const rw = document.getElementById("regRW").value;
+      const alamat = document.getElementById("regAlamat").value;
+      const username = document.getElementById("regUsername").value;
+      const password = document.getElementById("regPassword").value;
+
+      const warga = JSON.parse(localStorage.getItem("warga")) || [];
+      if (warga.find(u => u.username === username)) {
+        showPopup("Username sudah digunakan!", "ok");
+        return;
+      }
+
+      warga.push({ nama, rt, rw, alamat, username, password });
+      localStorage.setItem("warga", JSON.stringify(warga));
+
+      showPopup("Registrasi berhasil! Silakan login.", "success");
+      toggleRegister(false);
+    }
+
+    // === Toggle Show/Hide Password ===
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+    togglePassword.addEventListener("click", () => {
+      const show = passwordInput.type === "password";
+      passwordInput.type = show ? "text" : "password";
+      togglePassword.textContent = show ? "visibility" : "visibility_off";
+    });
+
+    const toggleRegPassword = document.getElementById("toggleRegPassword");
+    const regPassword = document.getElementById("regPassword");
+    toggleRegPassword.addEventListener("click", () => {
+      const show = regPassword.type === "password";
+      regPassword.type = show ? "text" : "password";
+      toggleRegPassword.textContent = show ? "visibility" : "visibility_off";
+    });
+  </script>
+  <script>
+function toggleRegister(show) {
+  document.getElementById("loginForm").style.display = show ? "none" : "block";
+  document.getElementById("registerForm").style.display = show ? "block" : "none";
+}
+
+// === REGISTRASI ===
+async function register(event) {
+  event.preventDefault();
+
+  const data = new URLSearchParams();
+  data.append("nama", document.getElementById("regNama").value);
+  data.append("rt", document.getElementById("regRT").value);
+  data.append("rw", document.getElementById("regRW").value);
+  data.append("alamat", document.getElementById("regAlamat").value);
+  data.append("username", document.getElementById("regUsername").value);
+  data.append("password", document.getElementById("regPassword").value);
+
+  const res = await fetch("register.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: data
+  });
+  const text = await res.text();
+
+  if (text === "success") {
+    alert("Registrasi berhasil! Silakan login.");
+    toggleRegister(false);
+  } else if (text === "username_exists") {
+    alert("Username sudah digunakan!");
+  } else {
+    alert("Gagal registrasi.");
+  }
+}
+
+// === LOGIN ===
+async function login(event) {
+  event.preventDefault();
+
+  const data = new URLSearchParams();
+  data.append("username", document.getElementById("username").value);
+  data.append("password", document.getElementById("password").value);
+
+  const res = await fetch("login.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: data
+  });
+  const text = await res.text();
+
+  if (text === "success") {
+    localStorage.setItem("isLoggedIn", "true");
+    window.location.href = "dashboard.html";
+  } else if (text === "wrong_password") {
+    alert("Password salah!");
+  } else if (text === "not_found") {
+    alert("Username tidak ditemukan!");
+  } else {
+    alert("Terjadi kesalahan koneksi.");
+  }
+}
+</script>
+
+</body>
+</html>

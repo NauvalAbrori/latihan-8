@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <link rel="stylesheet" href="dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,intial-scale=1">
+  <title>Dashboard Kelurahan Jati</title>
+  <style>
+    /* === RESET DAN DASAR === */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      min-height: 100vh;
+      background: #f4f6f8;
+      overflow: hidden;
+    }
+
+    /* === SIDEBAR === */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #3f51b5, #673ab7);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px 0;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.2);
+    }
+
+    .logo img {
+      width: 120px;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
+    .nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav li {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .nav li:hover,
+    .nav li.active {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .logout {
+      background: #e53935;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout:hover {
+      background: #c62828;
+    }
+
+    /* === MAIN CONTENT === */
+    .main-content {
+      flex: 1;
+      padding: 30px 40px;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #3f51b5, #673ab7);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .content-section {
+      display: none;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* === FORM UMUM === */
+    input, select, textarea, button {
+      font-family: inherit;
+      font-size: 14px;
+      padding: 8px;
+      margin: 6px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background: linear-gradient(90deg, #3f51b5, #673ab7);
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    /* === DATA RT/RW === */
+    #DataRTRW form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    #DataRTRW table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    #DataRTRW thead {
+      background: linear-gradient(90deg, #3f51b5, #673ab7);
+      color: white;
+    }
+
+    #DataRTRW th, #DataRTRW td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    #DataRTRW tbody tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    #DataRTRW button {
+      background: #3f51b5;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #DataRTRW button:hover {
+      background: #303f9f;
+    }
+
+    #DataRTRW .hapus-btn {
+      background: #e53935;
+    }
+
+    #DataRTRW .hapus-btn:hover {
+      background: #c62828;
+    }
+
+    /* === SCROLLBAR === */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div>
+      <div class="logo">
+        <img src="Logo Jati.png" alt="Logo Jati BISA">
+      </div>
+      <ul class="nav">
+        <li class="active" onclick="showSection('home')">Home</li>
+        <li onclick="showSection('PengaduanWarga')">Pengaduan Warga</li>
+        <li onclick="showSection('DataRTRW')">Data RT Dan RW</li>
+        <li onclick="showSection('FasilitasKelurahan')">Fasilitas Kelurahan</li>
+        <li onclick="showSection('Peta')">Peta</li>
+        <li onclick="showSection('informasi')">Informasi & Berita</li>
+      </ul>
+    </div>
+<!-- Tombol Logout -->
+<button id="logoutBtn" class="logout-btn">
+  <i></i> Logout
+</button>
+  </div>
+
+  <div class="main-content">
+    <div class="header">
+      <h2>SISTEM INFORMASI PENDATAAN RT DAN RW<br>KELURAHAN JATI - KECAMATAN MAYANGAN - KOTA PROBOLINGGO</h2>
+    </div>
+
+    <!-- HOME -->
+    <div id="home" class="content-section active">
+      <h3>Deskripsi</h3>
+      <p>Kantor Kelurahan Jati Probolinggo melayani masyarakat dalam memenuhi kebutuhan administrasi kependudukan,
+         termasuk di antaranya perizinan-perizinan seperti pekerjaan umum, perizinan umum keluarga, perizinan pendidikan,
+         kesehatan warga kelurahan, perumahan, perantauan, transportasi, lingkungan hidup, pertanahan, serta pemberdayaan perempuan dan perlindungan anak.</p>
+      <p>Kantor Kelurahan Jati memberikan berbagai pelayanan publik meliputi administrasi kependudukan, perizinan, kesehatan, dan pemberdayaan masyarakat.</p>
+      <p>Selain itu, kantor kelurahan ini juga menangani pengurusan surat seperti surat keterangan domisili, NPWP, Surat Keterangan Usaha, Surat Pindah Keluar, Surat Keterangan Tidak Mampu, dan lainnya.</p>
+      <p>Kantor Kelurahan Jati Probolinggo juga melayani urusan perizinan umum seperti izin toko, praktek dokter dan perawat, pembangunan posko, IMB, izin pertunjukan umum, perdagangan (SIUP), usaha mikro, dll.</p>
+      <p>Segera kunjungi Kantor Kelurahan Jati untuk mendapatkan informasi lengkap terkait administrasi kependudukan, aspirasi warga, info penyuluhan, dan layanan digital lainnya.</p>
+    <!-- Visi dan Misi -->
+  <div class="visi-misi-box">
+    <h3><i class="fas fa-bullseye"></i> Visi Kelurahan Jati</h3>
+    <p>
+      “Terwujudnya masyarakat Kelurahan Jati yang maju, mandiri, sejahtera, dan berakhlak mulia melalui pelayanan prima dan pemberdayaan masyarakat.”
+    </p>
+
+    <h3><i class="fas fa-road"></i> Misi Kelurahan Jati</h3>
+    <ul class="misi-list">
+      <li>✅ Meningkatkan kualitas pelayanan publik yang cepat, tepat, dan transparan.</li>
+      <li>✅ Mendorong partisipasi aktif masyarakat dalam pembangunan lingkungan.</li>
+      <li>✅ Mengembangkan potensi ekonomi lokal dan UMKM warga Kelurahan Jati.</li>
+      <li>✅ Mewujudkan lingkungan yang bersih, aman, dan berkelanjutan.</li>
+      <li>✅ Menumbuhkan budaya gotong royong dan kebersamaan antarwarga.</li>
+    </ul>
+  </div>
+  </div>
+
+    <!-- DATA RT/RW -->
+    <div id="DataRTRW" class="content-section">
+      <h3>Data RT Dan RW Kelurahan Jati</h3>
+ <form id="formTambahData">
+    <input type="text" id="rtInput" placeholder="RT" required>
+    <input type="text" id="rwInput" placeholder="RW" required>
+    <input type="text" id="ketuaRTInput" placeholder="Nama Ketua RT" required>
+    <input type="text" id="ketuaRWInput" placeholder="Nama Ketua RW" required>
+    <input type="text" id="alamatInput" placeholder="Alamat" required>
+    <button type="submit">Tambah</button>
+    <button type="button" id="clearStorageBtn" class="hapus-btn">Hapus Semua</button>
+  </form>
+
+  <table id="tabelDataRT">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>RT</th>
+        <th>RW</th>
+        <th>Nama Ketua RT</th>
+        <th>Nama Ketua RW</th>
+        <th>Alamat</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+const API_URL = "api_rtrw.php";
+
+// === Ambil data dari database saat halaman dibuka ===
+async function loadData() {
+  const res = await fetch(API_URL + "?action=get");
+  const data = await res.json();
+  const tbody = document.querySelector("#tabelDataRT tbody");
+  tbody.innerHTML = "";
+
+  if (data.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='6'>Belum ada data</td></tr>";
+    return;
+  }
+
+  data.forEach((row, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${row.rt}</td>
+      <td>${row.rw}</td>
+      <td>${row.ketua_rt}</td>
+      <td>${row.ketua_rw}</td>
+      <td>${row.alamat}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// === Tambah data baru ===
+document.getElementById("formTambahData").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append("action", "add");
+  formData.append("rt", document.getElementById("rtInput").value);
+  formData.append("rw", document.getElementById("rwInput").value);
+  formData.append("ketuaRT", document.getElementById("ketuaRTInput").value);
+  formData.append("ketuaRW", document.getElementById("ketuaRWInput").value);
+  formData.append("alamat", document.getElementById("alamatInput").value);
+
+  const res = await fetch(API_URL, { method: "POST", body: formData });
+  const data = await res.json();
+
+  alert(data.message);
+  if (data.status === "success") {
+    e.target.reset();
+    loadData();
+  }
+});
+
+// === Hapus semua data ===
+document.getElementById("clearStorageBtn").addEventListener("click", async () => {
+  if (confirm("Yakin ingin menghapus semua data RT/RW?")) {
+    const formData = new FormData();
+    formData.append("action", "delete_all");
+
+    const res = await fetch(API_URL, { method: "POST", body: formData });
+    const data = await res.json();
+
+    alert(data.message);
+    loadData();
+  }
+});
+
+// === Jalankan pertama kali ===
+loadData();
+</script>
+
+    <!-- PENGADUAN -->
+<div id="PengaduanWarga" class="content-section">
+  <h3>Formulir Pengaduan Warga</h3>
+  <form id="formPengaduan" action="https://formsubmit.co/nauvalabrori765@gmail.com" method="POST">
+    <input type="hidden" name="_captcha" value="false">
+  
+    <label>Nama:</label>
+    <input type="text" name="Nama" required>
+
+    <label>Alamat:</label>
+    <input type="text" name="Alamat" required>
+
+    <label>Jenis Pengaduan:</label>
+    <select name="Jenis Pengaduan" required>
+      <option value="Kebersihan">Kebersihan</option>
+      <option value="Keamanan">Keamanan</option>
+      <option value="Sosial">Sosial</option>
+      <option value="Infrastruktur">Infrastruktur</option>
+    </select>
+
+    <label>Deskripsi:</label>
+    <textarea name="Deskripsi" rows="4" required></textarea>
+
+    <button type="submit">Kirim</button>
+  </form>
+
+  <!-- Notifikasi -->
+  <div id="notif" class="notif">Pengaduan Anda sedang dikirim...</div>
+</div>
+
+<style>
+  .notif {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+    font-size: 16px;
+    animation: fadeInOut 3s ease-in-out;
+  }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -20px); }
+    10% { opacity: 1; transform: translate(-50%, 0); }
+    90% { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -20px); }
+  }
+</style>
+
+
+    <!-- FASILITAS KELURAHAN -->
+<div id="FasilitasKelurahan" class="content-section">
+  <h3>Fasilitas Kelurahan Jati</h3>
+  <div class="table-container">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Fasilitas</th>
+          <th>Lokasi</th>
+          <th>Keterangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Kantor Kelurahan Jati</td>
+          <td>Jl. Jati Raya No. 1</td>
+          <td>Fasilitas utama pelayanan warga dan administrasi.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Balai RW</td>
+          <td>Jl. Cendana No. 3</td>
+          <td>Tempat rapat warga, pos ronda, dan kegiatan sosial.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Puskesmas Pembantu</td>
+          <td>Jl. Mawar No. 7</td>
+          <td>Layanan kesehatan dasar, ibu hamil, dan balita.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Posyandu Melati</td>
+          <td>Jl. Melati No. 5</td>
+          <td>Pelayanan imunisasi dan kesehatan anak balita.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Lapangan Jati</td>
+          <td>Jl. Merpati No. 9</td>
+          <td>Tempat olahraga, upacara, dan kegiatan umum warga.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Masjid Dan Musholla</td>
+          <td>Jl. Angrek No. 14</td>
+          <td>Terdapat masjid dan musholla yang tersebar di beberapa RT.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 20px;">Semua fasilitas ini tersedia untuk menunjang kesejahteraan masyarakat dan dapat dimanfaatkan oleh warga sesuai kebutuhan dan peraturan yang berlaku di lingkungan masing-masing.</p>
+  </div>
+</div>
+  
+    <!-- PETA -->
+    <div id="Peta" class="content-section">
+      <h3>Peta Lokasi Kelurahan Jati</h3>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.319031265283!2d113.22360947476554!3d-7.755948392263035!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7ada5402bda93%3A0xa5580b6dcd652daf!2sKantor%20Lurah%20Jati!5e0!3m2!1sid!2sid!4v1753297226615!5m2!1sid!2sid" width="100%" height="450" style="border:0;" loading="lazy"></iframe>
+    </div>
+
+ <!-- === INFORMASI & BERITA === -->
+<div id="informasi" class="content-section">
+  <div class="modern-news">
+<h3>Berita Terkini di Kelurahan Jati</h3>
+    <div class="news-item">
+      <div class="news-header">
+        <h4 class="news-title">Pelayanan Publik Digital Diresmikan</h4>
+        <span class="news-date">17 Oktober 2025</span>
+      </div>
+      <p class="news-desc short">
+        Kelurahan Jati resmi meluncurkan sistem pelayanan publik digital untuk mempermudah warga dalam mengurus dokumen administrasi secara online.
+      </p>
+      <p class="news-desc full" style="display:none;">
+        Sistem ini memungkinkan warga untuk mengakses layanan seperti pembuatan surat keterangan, pengajuan izin, dan pelaporan secara daring tanpa perlu datang langsung ke kantor kelurahan.
+        Layanan ini juga terhubung dengan sistem administrasi kependudukan kota, sehingga proses validasi data menjadi lebih cepat dan efisien.
+      </p>
+      <button class="news-btn">Baca Selengkapnya</button>
+    </div>
+
+    <div class="news-item">
+      <div class="news-header">
+        <h4 class="news-title">Kegiatan Bersih Lingkungan Serentak</h4>
+        <span class="news-date">12 Oktober 2025</span>
+      </div>
+      <p class="news-desc short">
+        Warga RT dan RW di Kelurahan Jati melaksanakan aksi bersih lingkungan serentak untuk menjaga kebersihan dan keindahan lingkungan.
+      </p>
+      <p class="news-desc full" style="display:none;">
+        Kegiatan ini diikuti oleh seluruh RT dan RW bersama karang taruna, dengan fokus membersihkan saluran air, menanam pohon, dan mengecat fasilitas umum.
+        Lurah Jati berharap kegiatan ini menjadi agenda rutin setiap bulan.
+      </p>
+      <button class="news-btn">Baca Selengkapnya</button>
+    </div>
+
+    <div class="news-item">
+      <div class="news-header">
+        <h4 class="news-title">Lomba Inovasi Kelurahan Berprestasi</h4>
+        <span class="news-date">05 Oktober 2025</span>
+      </div>
+      <p class="news-desc short">
+        Kelurahan Jati masuk nominasi lomba inovasi tingkat kota dengan tema “Digitalisasi Layanan Masyarakat.
+      </p>
+      <p class="news-desc full" style="display:none;">
+        Dalam lomba ini, Kelurahan Jati menampilkan inovasi aplikasi layanan publik berbasis web yang dikembangkan untuk mempermudah pelaporan dan aspirasi warga secara online.
+        Inovasi ini mendapat sambutan positif dari tim juri dan masyarakat.
+      </p>
+      <button class="news-btn">Baca Selengkapnya</button>
+    </div>
+
+    <div class="news-item">
+      <div class="news-header">
+        <h4 class="news-title">Penyuluhan Kesehatan untuk Lansia</h4>
+        <span class="news-date">09 Oktober 2025</span>
+      </div>
+      <p class="news-desc short">
+        Kelurahan Jati Layanan Puskesmas.
+      </p>
+      <p class="news-desc full" style="display:none;">
+        Puskesmas Pembantu Kelurahan Jati mengadakan penyuluhan tentang pencegahan hipertensi dan diabetes kepada warga lansia pada hari Jumat, 18 Juli 2025. Acara ini dihadiri oleh puluhan warga dan dipandu langsung oleh tenaga medis dari puskesmas.</p>
+      </p>
+      <button class="news-btn">Baca Selengkapnya</button>
+    </div>
+
+  </div>
+</div>
+
+  
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("formTambahData");
+  const tbody = document.querySelector("#tabelDataRT tbody");
+  const clearStorageBtn = document.getElementById("clearStorageBtn");
+
+  function loadData() {
+    tbody.innerHTML = "";
+    const data = JSON.parse(localStorage.getItem("dataRT")) || [];
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">Belum ada data</td></tr>`;
+      return;
+    }
+    data.forEach((item, i) => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${item.rt}</td>
+          <td>${item.rw}</td>
+          <td>${item.ketuaRT}</td>
+          <td>${item.ketuaRW}</td>
+          <td>${item.alamat}</td>
+          <td>
+            <button onclick="editData(${i})">Edit</button>
+            <button class="hapus-btn" onclick="hapusData(${i})">Hapus</button>
+          </td>
+        </tr>`;
+    });
+  }
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const data = JSON.parse(localStorage.getItem("dataRT")) || [];
+    data.push({
+      rt: rtInput.value,
+      rw: rwInput.value,
+      ketuaRT: ketuaRTInput.value,
+      ketuaRW: ketuaRWInput.value,
+      alamat: alamatInput.value
+    });
+    localStorage.setItem("dataRT", JSON.stringify(data));
+    form.reset();
+    loadData();
+  });
+
+  // ==== Hapus Semua ====
+  clearStorageBtn.addEventListener("click", () => {
+    showConfirm("Hapus Semua Data?", "Semua data RT/RW akan dihapus permanen!", () => {
+      localStorage.removeItem("dataRT");
+      loadData();
+      showToast("Semua data berhasil dihapus!");
+    });
+  });
+
+  // ==== Edit Data ====
+  window.editData = i => {
+    const data = JSON.parse(localStorage.getItem("dataRT")) || [];
+    const d = data[i];
+    if (!d) return;
+
+    const fields = [
+      { label: "RT", key: "rt", value: d.rt },
+      { label: "RW", key: "rw", value: d.rw },
+      { label: "Nama Ketua RT", key: "ketuaRT", value: d.ketuaRT },
+      { label: "Nama Ketua RW", key: "ketuaRW", value: d.ketuaRW },
+      { label: "Alamat", key: "alamat", value: d.alamat }
+    ];
+
+    const formHtml = fields.map(f => `
+      <label style="display:block;margin-top:10px;color:#333;font-size:14px;">${f.label}</label>
+      <input name="${f.key}" value="${f.value}" 
+        style="width:100%;padding:8px;border:1px solid #ccc;border-radius:8px;font-size:14px;">
+    `).join("");
+
+    const popup = document.createElement("div");
+    popup.innerHTML = `
+      <div style="
+        position:fixed;top:0;left:0;width:100%;height:100%;
+        background:rgba(0,0,0,0.5);display:flex;
+        align-items:center;justify-content:center;z-index:9999;">
+        <div style="
+          background:white;border-radius:16px;
+          padding:25px 30px;width:360px;
+          box-shadow:0 6px 20px rgba(0,0,0,0.25);">
+          <h3 style="color:#4b32c3;margin-bottom:10px;">Edit Data RT/RW</h3>
+          <form id="editForm">
+            ${formHtml}
+            <div style="text-align:right;margin-top:18px;">
+              <button type="button" id="cancelEdit" style="
+                background:#e5e7eb;color:#333;border:none;
+                padding:8px 16px;border-radius:8px;cursor:pointer;margin-right:8px;">Batal</button>
+              <button type="submit" style="
+                background:linear-gradient(90deg,#3f51b5,#3f51b5);
+                color:white;border:none;padding:8px 16px;
+                border-radius:8px;cursor:pointer;">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(popup);
+
+    const formEdit = popup.querySelector("#editForm");
+    const cancelEdit = popup.querySelector("#cancelEdit");
+
+    cancelEdit.onclick = () => popup.remove();
+
+    formEdit.onsubmit = e => {
+      e.preventDefault();
+      fields.forEach(f => {
+        d[f.key] = formEdit.elements[f.key].value.trim();
+      });
+      localStorage.setItem("dataRT", JSON.stringify(data));
+      popup.remove();
+      loadData();
+      showToast("Data berhasil diperbarui!");
+    };
+  };
+
+  // ==== Hapus Satu ====
+  window.hapusData = i => {
+    showConfirm("Hapus Data Ini?", "Data yang dihapus tidak bisa dikembalikan.", () => {
+      const data = JSON.parse(localStorage.getItem("dataRT")) || [];
+      data.splice(i, 1);
+      localStorage.setItem("dataRT", JSON.stringify(data));
+      loadData();
+      showToast("Data berhasil dihapus!");
+    });
+  };
+
+  // ==== Popup Konfirmasi ====
+  function showConfirm(title, message, onConfirm) {
+    const popup = document.createElement("div");
+    popup.innerHTML = `
+      <div style="
+        position:fixed;top:0;left:0;width:100%;height:100%;
+        background:rgba(0,0,0,0.5);display:flex;
+        align-items:center;justify-content:center;z-index:9999;">
+        <div style="
+          background:white;border-radius:16px;
+          padding:25px 30px;width:350px;
+          box-shadow:0 6px 20px rgba(0,0,0,0.25);
+          animation:fadeIn 0.3s ease;">
+          <h3 style="color:#4b32c3;margin-bottom:10px;">${title}</h3>
+          <p style="color:#333;font-size:14px;margin-bottom:20px;">${message}</p>
+          <div style="text-align:right;">
+            <button id="cancelBtn" style="
+              background:#e5e7eb;color:#333;border:none;
+              padding:8px 16px;border-radius:8px;cursor:pointer;margin-right:8px;">Batal</button>
+            <button id="confirmBtn" style="
+              background:linear-gradient(90deg,#3f51b5,#3f51b5);
+              color:white;border:none;padding:8px 16px;
+              border-radius:8px;cursor:pointer;">Ya, Hapus</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(popup);
+
+    popup.querySelector("#cancelBtn").onclick = () => popup.remove();
+    popup.querySelector("#confirmBtn").onclick = () => {
+      onConfirm();
+      popup.remove();
+    };
+  }
+
+  // ==== Notifikasi Toast ====
+  function showToast(message) {
+    const toast = document.createElement("div");
+    toast.textContent = message;
+    toast.style = `
+      position:fixed;bottom:30px;right:30px;
+      background:linear-gradient(90deg,#777,#777);
+      color:white;padding:12px 22px;border-radius:8px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.25);
+      font-size:14px;z-index:10000;opacity:0;
+      transform:translateY(20px);transition:all 0.4s ease;
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = "1";
+      toast.style.transform = "translateY(0)";
+    }, 10);
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(20px)";
+      setTimeout(() => toast.remove(), 400);
+    }, 2500);
+  }
+
+  loadData();
+});
+</script>
+
+
+<script>
+function showSection(id) {
+  // Sembunyikan semua section
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+
+  // Tampilkan section yang dipilih
+  const selected = document.getElementById(id);
+  if (selected) selected.classList.add('active');
+
+  // Update menu aktif
+  document.querySelectorAll('.nav li').forEach(li => li.classList.remove('active'));
+  if (event.target) event.target.classList.add('active');
+
+  // Scroll ke atas setiap kali berpindah menu
+  document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Tampilkan berita hanya di menu informasi
+  document.querySelectorAll('.modern-news').forEach(news => news.style.display = 'none');
+  if (id === 'informasi') {
+    document.querySelector('#informasi .modern-news').style.display = 'block';
+  }
+}
+
+// Fungsikan tombol baca selengkapnya
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".news-item").forEach(item => {
+    const shortDesc = item.querySelector(".news-desc.short");
+    const fullDesc = item.querySelector(".news-desc.full");
+    const button = item.querySelector(".news-btn");
+
+    button.addEventListener("click", () => {
+      const isOpen = fullDesc.style.display === "block";
+      fullDesc.style.display = isOpen ? "none" : "block";
+      button.textContent = isOpen ? "Baca Selengkapnya" : "Tutup";
+    });
+  });
+});
+</script>
+
+<!-- Popup Konfirmasi -->
+<div id="logoutConfirm" class="logout-popup">
+  <div class="logout-box">
+    <h3>Konfirmasi Logout</h3>
+    <p>Apakah Anda yakin ingin keluar dari dashboard?</p>
+    <div class="logout-actions">
+      <button id="confirmLogout" class="btn-logout-yes">Ya, Keluar</button>
+      <button id="cancelLogout" class="btn-logout-no">Batal</button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Tombol Logout */
+.logout-btn {
+  width: 90%;
+  margin: 15px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #e53935, #b71c1c);
+  box-shadow: 0 4px 10px rgba(229,57,53,0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(229,57,53,0.5);
+}
+
+/* Latar belakang popup */
+.logout-popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.45);
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Box popup */
+.logout-box {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 25px 30px;
+  text-align: center;
+  width: 320px;
+  color: #fff;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  animation: popupUp 0.3s ease;
+}
+.logout-box h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #fff;
+}
+.logout-box p {
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+/* Tombol di popup */
+.logout-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-logout-yes, .btn-logout-no {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+.btn-logout-yes {
+  background: linear-gradient(135deg, #e53935, #d32f2f);
+  color: #fff;
+}
+.btn-logout-yes:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);
+}
+.btn-logout-no {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+.btn-logout-no:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Animasi */
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes popupUp {
+  from { transform: translateY(25px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
+
+<script>
+const logoutBtn = document.getElementById("logoutBtn");
+const logoutConfirm = document.getElementById("logoutConfirm");
+const confirmLogout = document.getElementById("confirmLogout");
+const cancelLogout = document.getElementById("cancelLogout");
+
+logoutBtn.addEventListener("click", () => {
+  logoutConfirm.style.display = "flex";
+});
+
+cancelLogout.addEventListener("click", () => {
+  logoutConfirm.style.display = "none";
+});
+
+confirmLogout.addEventListener("click", () => {
+  // Hapus status login dari localStorage agar tidak bisa masuk langsung
+  localStorage.removeItem("isLoggedIn");
+
+  // Arahkan ke halaman login (index.html)
+  window.location.href = "index.html";
+});
+
+// Jika belum login dan mencoba buka dashboard langsung, arahkan ke login
+if (!localStorage.getItem("isLoggedIn")) {
+  window.location.href = "index.html";
+}
+</script>
+
+<script>
+  document.getElementById("formPengaduan").addEventListener("submit", function() {
+    const notif = document.getElementById("notif");
+    notif.textContent = "Pengaduan Anda sedang dikirim...";
+    notif.style.display = "block";
+
+    setTimeout(() => {
+      notif.textContent = "Terima kasih! Pengaduan Anda berhasil dikirim.";
+    }, 1000);
+  });
+</script>
+</body>
+</html>

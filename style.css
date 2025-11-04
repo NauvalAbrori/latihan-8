@@ -1,0 +1,237 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+  background-image: url('gambar\ kel\ jati.jpg'); /* Ganti dengan gambar background kamu */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  width: 90%;
+  max-width: 400px;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+h1 span {
+  font-size: 24px;
+}
+
+.subtitle {
+  font-size: 13px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+/* === Jarak antar kolom di form login & registrasi === */
+#registerForm input,
+#registerForm .input-group {
+  margin-bottom: 14px !important; /* 🔥 jarak antar kolom seragam */
+  display: block;
+}
+
+#registerForm .input-group input {
+  margin-bottom: 0 !important; /* hilangkan jarak ganda dalam group password */
+}
+
+.login-form input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px auto;
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.footer-text {
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+.ig {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #ddd;
+}
+
+
+/* === TABEL FASILITAS === */
+#FasilitasKelurahan table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+#FasilitasKelurahan thead {
+  background: linear-gradient(90deg, #3f51b5, #673ab7);
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+#FasilitasKelurahan th, #FasilitasKelurahan td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+#FasilitasKelurahan tbody tr {
+  background: #fff;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#FasilitasKelurahan tbody tr:hover {
+  background: #ede7f6;
+  transform: scale(1.01);
+}
+
+#FasilitasKelurahan td:first-child {
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+@media (max-width: 600px) {
+  #FasilitasKelurahan table {
+    font-size: 13px;
+  }
+}
+/* Semua section disembunyikan dulu */
+.content-section {
+  display: none;
+}
+
+/* Hanya section yang aktif yang ditampilkan */
+.content-section.active {
+  display: block;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 22px; /* ukuran ikon */
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 90%;
+    padding: 25px 20px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .login-form input,
+  .login-form button {
+    font-size: 13px;
+    padding: 10px;
+  }
+}
+
+/* === RESPONSIVE LOGIN === */
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+    padding: 30px 25px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  .login-form input {
+    font-size: 13px;
+    padding: 10px 40px 10px 12px;
+  }
+
+  .login-form button {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  a {
+    font-size: 12px;
+  }
+
+  .footer-text {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 92%;
+    padding: 25px 20px;
+  }
+
+  h1 {
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .login-form input,
+  .login-form button {
+    font-size: 12px;
+    padding: 9px;
+  }
+}
+
+
+
+
+
+
+
+
